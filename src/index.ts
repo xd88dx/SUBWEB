@@ -1,6 +1,6 @@
 import './assets/css/index.less';
 import { Options } from './types';
-import { backendConfig, externalConfig, targetConfig } from './config';
+import { shorturlConfig, backendConfig, externalConfig, targetConfig } from './config';
 
 let subUrl = '';
 
@@ -65,12 +65,51 @@ layui.use(['form'], () => {
         childrenHtml += `<option value="${option.value}">${option.label}</option>`;
     });
     $('#backendSelecter').append(childrenHtml);
+
+    childrenHtml = '';
+    shorturlConfig.forEach(option => {
+        childrenHtml += `<option value="${option.value}">${option.label}</option>`;
+    });
+    $('#shorturlSelecter').append(childrenHtml);
     form.render('select', 'optionsForm');
 
 
     form.on('submit(generate)', target => {
         const data = target.field as Options;
         generateSubUrl(data);
+    });
+
+    $('#generateShort').on('click', async () => {
+        if (!subUrl) { return layui.layer.msg('未生成新的订阅链接', { icon: 2 }); }
+
+        const apiUrl = $('#shorturlSelecter').val();
+
+        if (!apiUrl || apiUrl=='') { return layui.layer.msg('未选择短链配置', { icon: 2 }); }
+
+        const postData = {
+            longUrl: btoa(subUrl),
+            shortKey: ""
+        };
+
+        try {
+            const response = await fetch(apiUrl as string, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;',
+                },
+                body: new URLSearchParams(postData).toString()
+            });
+
+            const result = await response.json();
+            console.log('短链生成结果:', result);
+
+            subUrl=""
+            $('#result').val(subUrl);
+
+            $('#result-short').val(result.ShortUrl);
+        } catch (error) {
+            console.error('请求失败:', error);
+        }
     });
 
     $('#importToClash').on('click', () => {

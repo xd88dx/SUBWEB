@@ -9,11 +9,11 @@
     <link href="https://unpkg.com/layui@2.7.6/dist/css/layui.css" rel="stylesheet">
     <script src="https://unpkg.com/jquery@3.6.4/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/layui@2.7.6/dist/layui.js"></script>
-    <title>CM订阅转换</title>
+    <title>订阅转换</title>
 </head>
 
 <body>
-    <a href="https://github.com/cmliu/SUBWEB" target="_blank" class="github-corner"
+    <a href="https://github.com/xd88dx/SUBWEB" target="_blank" class="github-corner"
         aria-label="View source on Github"><svg viewBox="0 0 250 250" aria-hidden="true">
             <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
             <path
@@ -24,14 +24,14 @@
                 fill="currentColor" class="octo-body"></path>
         </svg></a>
     <header>
-        <h1>CM订阅转换</h1>
+        <h1>订阅转换</h1>
     </header>
     <div class="layui-form form" lay-filter="optionsForm">
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label required">原订阅链接:</label>
+            <label class="layui-form-label required">原始链接:</label>
             <div class="layui-input-block">
                 <textarea name="url" lay-filter="url" required lay-verify="required"
-                    placeholder="支持订阅或ss/ssr/vmess链接，多个链接每行一个或用 | 分隔" class="layui-textarea"></textarea>
+                    placeholder="多个链接每行一个或用 | 分隔" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -76,6 +76,15 @@
                     class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">短链配置:</label>
+            <div class="layui-input-block">
+                <select name="shorturl" id="shorturlSelecter"
+                    lay-filter="shorturl">
+                    <option value="">不需要</option>
+                </select>
+            </div>
+        </div>
         <div class="layui-form-item inline">
             <label class="layui-form-label">启用Emoji:</label>
             <div class="layui-input-block">
@@ -109,12 +118,6 @@
                 <input type="checkbox" name="udp" lay-filter="udp" value="true" lay-skin="switch" lay-text="ON|OFF">
             </div>
         </div>
-        <!-- <div class="layui-form-item inline">
-            <label class="layui-form-label">TCP Fast Open</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="tfo" lay-skin="switch" lay-text="ON|OFF">
-            </div>
-        </div> -->
         <div class="layui-form-item inline">
             <label class="layui-form-label">Node List:</label>
             <div class="layui-input-block">
@@ -141,20 +144,27 @@
         </div>
         <div class="layui-form-item form-footer">
             <div class="layui-input-block">
-                <button class="layui-btn button" lay-submit lay-filter="generate">生成新订阅链接</button>
-                <button class="layui-btn button" id="importToClash">一键导入Clash</button>
-            </div>
+                <button class="layui-btn button" lay-submit lay-filter="generate">订阅转换</button>
+                <button class="layui-btn button" id="generateShort">生成短链</button>
+                <button class="layui-btn button" id="importToClash">导入Clash</button>
+              </div>
         </div>
     </div>
     <hr>
     <div class="form">
         <div class="layui-form-item layui-form-text result">
-            <label class="layui-form-label">新订阅链接:</label>
-            <div class="layui-input-block">
-                <textarea id="result" placeholder="新的订阅链接将显示在这里" class="layui-textarea"></textarea>
-            </div>
+          <label class="layui-form-label">订阅转换:</label>
+          <div class="layui-input-block">
+            <textarea id="result" placeholder="新订阅链接将显示在这里" class="layui-textarea"></textarea>
+          </div>
         </div>
-    </div>
+        <div class="layui-form-item layui-form-text result">
+            <label class="layui-form-label">生成短链:</label>
+            <div class="layui-input-block">
+              <textarea id="result-short" placeholder="新生成短链将显示在这里" class="layui-textarea"></textarea>
+            </div>
+          </div>
+      </div>
 </body>
 
 </html>
