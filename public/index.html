@@ -79,10 +79,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label">短链配置:</label>
             <div class="layui-input-block">
-                <select name="shorturl" id="shorturlSelecter"
-                    lay-filter="shorturl">
+                <select name="shorturl" id="shorturlSelecter" lay-filter="shorturl">
                     <option value="">不需要</option>
                 </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">短链密钥:</label>
+            <div class="layui-input-block">
+                <input type="text" name="shortkey" id="shortkeyText" lay-filter="shortkey" placeholder="短链密钥，如果需要" autocomplete="off"
+                    class="layui-input">
             </div>
         </div>
         <div class="layui-form-item inline">

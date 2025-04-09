@@ -1,6 +1,9 @@
 export const shorturlConfig = [{
     label: 'myurls-cf',
     value: 'https://i.ziz.dpdns.org/short'
+}, {
+    label: 'shlink-self',
+    value: 'https://url.933993.xyz:1443//rest/v3/short-urls'
 }];
 export const targetConfig = [{
     label: 'Clash',

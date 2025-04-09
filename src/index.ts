@@ -80,35 +80,67 @@ layui.use(['form'], () => {
     });
 
     $('#generateShort').on('click', async () => {
-        if (!subUrl) { return layui.layer.msg('未生成新的订阅链接', { icon: 2 }); }
+        if (!subUrl) {
+            return layui.layer.msg('未生成新的订阅链接', { icon: 2 });
+        }
 
-        const apiUrl = $('#shorturlSelecter').val();
+        const selectedOption = $('#shorturlSelecter option:selected');
+        const apiUrl = selectedOption.val();
+        const labelText = selectedOption.text().toLowerCase();
 
-        if (!apiUrl || apiUrl=='') { return layui.layer.msg('未选择短链配置', { icon: 2 }); }
-
-        const postData = {
-            longUrl: btoa(subUrl),
-            shortKey: ""
-        };
+        if (!apiUrl || apiUrl === '') {
+            return layui.layer.msg('未选择短链配置', { icon: 2 });
+        }
 
         try {
-            const response = await fetch(apiUrl as string, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;',
-                },
-                body: new URLSearchParams(postData).toString()
-            });
+            let result;
 
-            const result = await response.json();
-            console.log('短链生成结果:', result);
+            if (labelText.includes('myurls')) {
+                const postData = {
+                    longUrl: btoa(subUrl),
+                    shortKey: ""
+                };
 
-            subUrl=""
+                const response = await fetch(apiUrl as string, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    },
+                    body: new URLSearchParams(postData).toString()
+                });
+
+                result = await response.json();
+
+                $('#result-short').val(result.ShortUrl);
+            } else if (labelText.includes('shlink')) {
+                const apiKey = $('#shortkeyText').val();
+                if (!apiKey || apiKey === '') {
+                    return layui.layer.msg('未填写短链密钥', { icon: 2 });
+                }
+
+                const response = await fetch(apiUrl as string, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Api-Key': apiKey as string
+                    },
+                    body: JSON.stringify({
+                        longUrl: subUrl,
+                        findIfExists: true,
+                    })
+                });
+
+                result = await response.json();
+
+                $('#result-short').val(result.shortUrl);
+            } else {
+                return layui.layer.msg('不支持的短链配置类型', { icon: 2 });
+            }
+
+            subUrl = "";
             $('#result').val(subUrl);
-
-            $('#result-short').val(result.ShortUrl);
         } catch (error) {
-            console.error('请求失败:', error);
+            layui.layer.msg('短链生成失败', { icon: 2 });
         }
     });
 
